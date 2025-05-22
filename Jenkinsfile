@@ -48,7 +48,10 @@ pipeline {
             steps {
                 sh '''
                 npm i serve
-                node_modules/.bin/serve -s build
+                # & running in background
+                node_modules/.bin/serve -s build &
+                # tunggu server ready
+                sleep 10
                 npm playwright test
                 '''
             }
