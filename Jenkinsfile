@@ -70,7 +70,7 @@ pipeline {
                     post{
                         always{
                             // junit 'jest-results/junit.xml'
-                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright LOCAL Report', reportTitles: '', useWrapperFileDirectly: true])
                         }
                     }
                 }
@@ -92,6 +92,30 @@ pipeline {
                     node_modules/.bin/netlify status
                     node_modules/.bin/netlify deploy --dir=build --prod
                 '''
+            }
+        }
+
+        stage('Prod E2E') {
+            agent{
+                docker{
+                    image 'mcr.microsoft.com/playwright:v1.52.0-noble'
+                    reuseNode true
+                }
+            }
+            environment{
+                CI_ENVIRONMENT_URL = 'https://glittering-gelato-fa6864.netlify.app'
+            }
+            steps {
+                sh '''
+                    sleep 10
+                    npx playwright test --reporter=html
+                '''
+            }
+            post{
+                always{
+                    // junit 'jest-results/junit.xml'
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright E2E Report', reportTitles: '', useWrapperFileDirectly: true])
+                }
             }
         }
     }
