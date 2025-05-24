@@ -136,14 +136,14 @@ pipeline {
             }
         }
 
-        // stage('approval') {
-        //     steps {
-        //         timeout(time: 1, unit: 'HOURS') {
-        //             // some block
-        //             input message: 'ready to deploy?', ok: 'Yes deploy'
-        //         }
-        //     }
-        // }
+        stage('approval') {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    // some block
+                    input message: 'ready to deploy?', ok: 'Yes deploy'
+                }
+            }
+        }
 
         // stage('deploy production'){
         //     agent{
