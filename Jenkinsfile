@@ -107,10 +107,10 @@ pipeline {
                     reuseNode true
                 }
             }
-            // environment{
-            //     // CI_ENVIRONMENT_URL = "${env.STAGING_URL}"
-            //     CI_ENVIRONMENT_URL = 'please replace'
-            // }
+            environment{
+                // CI_ENVIRONMENT_URL = "${env.STAGING_URL}"
+                CI_ENVIRONMENT_URL = 'please replace'
+            }
             steps {
                 sh '''
                     npm install netlify-cli@20.1.1
