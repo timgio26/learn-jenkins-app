@@ -133,25 +133,25 @@ pipeline {
             }
         }
 
-        stage('deploy production'){
-            agent{
-                docker{
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
-            steps{
-                sh '''
-                    npm install netlify-cli@20.1.1
-                    node_modules/.bin/netlify --version
-                    echo "deploying to $NETLIFY_SITE_ID"
-                    node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --prod
-                '''
-            }
-        }
+        // stage('deploy production'){
+        //     agent{
+        //         docker{
+        //             image 'node:18-alpine'
+        //             reuseNode true
+        //         }
+        //     }
+        //     steps{
+        //         sh '''
+        //             npm install netlify-cli@20.1.1
+        //             node_modules/.bin/netlify --version
+        //             echo "deploying to $NETLIFY_SITE_ID"
+        //             node_modules/.bin/netlify status
+        //             node_modules/.bin/netlify deploy --dir=build --prod
+        //         '''
+        //     }
+        // }
 
-        stage('Prod E2E') {
+        stage('deploy Prod + E2E') {
             agent{
                 docker{
                     image 'mcr.microsoft.com/playwright:v1.52.0-noble'
@@ -163,7 +163,12 @@ pipeline {
             }
             steps {
                 sh '''
-                    sleep 10
+                    npm install netlify-cli@20.1.1
+                    node_modules/.bin/netlify --version
+                    echo "deploying to $NETLIFY_SITE_ID"
+                    node_modules/.bin/netlify status
+                    node_modules/.bin/netlify deploy --dir=build --prod
+                    sleep 30
                     npx playwright test --reporter=html
                 '''
             }
